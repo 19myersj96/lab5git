@@ -1,0 +1,37 @@
+from flask import Flask, jsonify, json
+
+with open('records.json') as f:
+    all_records = json.load(f)
+
+all_records = [
+    { app = Flask(__name__)
+        "name" : "Radiohead", @app.route('/records', methods=['GET']) def get_all_records():
+        "albums" : [	return jsonify(all_records)
+            { @app.route('/records/<bandname>', methods=['GET','DELETE']) def get_albums_by_band(bandname):
+                "title":"The King of Limbs", albums = [band['albums'] for band in all_records if band['name'] == bandname]
+                "songs":[], if len(albums)==0:
+                "description":"..."  return jsonify({'error':'band name not found!'}), 404
+            }, else:
+            { response = [album['title'] for album in albums[0]]
+                "title":"OK Computer", return jsonify(response), 200
+                "songs":[],
+                "description":"..." @app.route('/records/<bandname>/<albumtitle>', methods=['GET']) def get_songs_by_band_and_album(bandname, albumtitle):
+            }    albums = [band['albums'] for band in all_records if band['name'] == bandname]
+        ] if len(albums)==0:
+    }, return jsonify({'error':'band name not found!'}), 404
+    { else:
+        "name":"Portishead", songs = [album['songs'] for album in albums[0] if album['title'] == albumtitle]
+        "albums":[ if len(songs)==0:
+            { return jsonify({'error':'album title not found!'}), 404
+                "title":"Dummy", else:
+                "songs":[], return jsonify(songs[0]), 200
+                "description":"..."
+            },
+            {if __name__ == '__main__':
+                "title":"Third",	app.run(host='0.0.0.0')
+                "songs":[],
+                "description":"..."
+            }
+        ]
+    }
+]
